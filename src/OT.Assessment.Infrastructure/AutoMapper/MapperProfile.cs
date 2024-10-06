@@ -13,8 +13,7 @@ namespace OT.Assessment.Infrastructure.AutoMapper
     {
         public MapperProfile()
         {
-            CreateMap<AddCasionWagerDTO, CasinoWager>().
-                ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.WagerId));
+            CreateMap<AddCasionWagerDTO, CasinoWager>();
         }
     }
 }
