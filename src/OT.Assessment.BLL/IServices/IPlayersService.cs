@@ -9,6 +9,7 @@ namespace OT.Assessment.BLL.IServices
 {
     public interface IPlayersService
     {
+        Task AddBulk(List<AddCasionWagerDTO> addCasionWagerDTOs);
         Task AddCasinoWager(AddCasionWagerDTO addCasionWagerDTO);
         Task<PlayerWagersDTO> GetPlayerWagers(string playerId, int pageSize, int page);
         Task<List<SpenderDTO>> TopSpenders(int count);
