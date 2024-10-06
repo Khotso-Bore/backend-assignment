@@ -1,7 +1,32 @@
+using Microsoft.EntityFrameworkCore;
+using OT.Assessment.BLL.IServices;
+using OT.Assessment.BLL.Services;
+using OT.Assessment.Domain.Data;
+using OT.Assessment.Infrastructure.IRepository;
+using OT.Assessment.Infrastructure.RabbitMQ;
+using OT.Assessment.Infrastructure.Repository;
+using OT.Assessment.Infrastructure.Settings;
+using RabbitMQ.Client;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
+
+builder.Services.AddDbContext<OTDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"));
+});
+
+builder.Services.Configure<RabbitSettings>(builder.Configuration.GetSection("RabbitMQ"));
+
+builder.Services.AddSingleton(sp =>
+{
+    return new ConnectionFactory();
+});
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddSingleton<IRabbitMQProducer, RabbitMQProducer>();
+builder.Services.AddTransient<IPlayersService, PlayersService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckl
 builder.Services.AddEndpointsApiExplorer();
@@ -11,6 +36,8 @@ builder.Services.AddSwaggerGen(options =>
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
+
+
 
 var app = builder.Build();
 
