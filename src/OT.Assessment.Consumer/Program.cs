@@ -42,7 +42,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<IPlayersService, PlayersService>();
 
         services.AddHostedService<RabbitMQConsumer>();
-        services.AddSingleton(sp =>
+        services.AddScoped(sp =>
         {
             return new ConnectionFactory();
         });
