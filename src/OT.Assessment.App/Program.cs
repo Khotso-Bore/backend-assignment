@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Connections;
 using Microsoft.EntityFrameworkCore;
 using OT.Assessment.BLL.IServices;
 using OT.Assessment.BLL.Services;
@@ -8,6 +9,7 @@ using OT.Assessment.Infrastructure.Repository;
 using OT.Assessment.Infrastructure.Settings;
 using RabbitMQ.Client;
 using System.Reflection;
+using System.Threading.Channels;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -19,14 +21,9 @@ builder.Services.AddDbContext<OTDbContext>(options =>
 
 builder.Services.Configure<RabbitSettings>(builder.Configuration.GetSection("RabbitMQ"));
 
-builder.Services.AddSingleton(sp =>
-{
-    return new ConnectionFactory();
-});
-
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddSingleton<IRabbitMQProducer, RabbitMQProducer>();
-builder.Services.AddTransient<IPlayersService, PlayersService>();
+builder.Services.AddScoped<IRabbitMQProducer, RabbitMQProducer>();
+builder.Services.AddScoped<IPlayersService, PlayersService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckl
 builder.Services.AddEndpointsApiExplorer();
