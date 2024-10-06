@@ -29,27 +29,31 @@ namespace OT.Assessment.BLL.Services
             return Task.CompletedTask;
         }
 
+        public Task AddBulk(List<AddCasionWagerDTO> addCasionWagerDTOs)
+        {
+            _rabbitMQProducer.Publish(addCasionWagerDTOs);
+            return Task.CompletedTask;
+        }
+
         public async Task<PlayerWagersDTO> GetPlayerWagers(string playerId, int pageSize, int page)
         {
             var skip = (page - 1) * pageSize;
             var wages = await _unitOfWork.Wagers
                 .GetSet()
-                .Where(x => x.AccountId.Equals(playerId))
+                .Where(x => x.AccountId.Equals(Guid.Parse(playerId)))
                 .Skip(skip)
                 .Take(pageSize)
-                .Include(x => x.Game)
-                .ThenInclude(g => g.Provider)
                 .Select(x => new WagerDTO
                 {
-                    WagerId = x.Id,
+                    WagerId = x.WagerId,
                     Amount = x.Amount,
                     CreatedDate = x.CreatedDateTime,
-                    Game = x.Game.Name,
-                    Provider = x.Game.Provider.Name
+                    Game = x.GameName,
+                    Provider = x.Provider
                 })
                 .ToListAsync();
             
-            var totalCount = _unitOfWork.Wagers.GetSet().Count();
+            var totalCount = _unitOfWork.Wagers.GetSet().Where(x => x.AccountId.Equals(Guid.Parse(playerId))).Count();
             var totalPages = (int)Math.Ceiling(totalCount / (decimal)pageSize);
 
             return new PlayerWagersDTO
@@ -66,12 +70,11 @@ namespace OT.Assessment.BLL.Services
         public Task<List<SpenderDTO>> TopSpenders(int count)
         {
             var topSpenders = _unitOfWork.Wagers.GetSet()
-                .Include(x => x.Player)
                 .GroupBy(x => x.AccountId)
                 .Select(g => new SpenderDTO
                 {
                     AccountId = g.Key,
-                    Username = g.Select(x => x.Player.Username).FirstOrDefault(),
+                    Username = g.Select(x => x.Username).FirstOrDefault(),
                     TotalAmountSpend = g.Sum(x => x.Amount),
                 })
                 .OrderByDescending(x => x.TotalAmountSpend)
