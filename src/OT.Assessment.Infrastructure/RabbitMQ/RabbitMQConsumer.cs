@@ -51,7 +51,7 @@ namespace OT.Assessment.Infrastructure.RabbitMQ
             {
                 var message = args.Body.ToArray();
                 _messageHandler.HandleMessage(message);
-                Console.WriteLine(message);
+                //Console.WriteLine(message);
 
                 _channel.BasicAck(args.DeliveryTag, false);
             };
