@@ -15,7 +15,7 @@ namespace OT.Assessment.Infrastructure.IRepository
         IRepository<Game> Games { get; }
         IRepository<CasinoWager> Wagers { get; }
 
-        void Commit();
+        Task Commit();
         void Dispose();
     }
 }
