@@ -29,9 +29,9 @@ namespace OT.Assessment.Infrastructure.Repository
             Games = new Repository<Game>(context);
         }
 
-        public void Commit()
+        public async Task Commit()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public void Dispose()
