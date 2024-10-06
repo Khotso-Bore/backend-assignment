@@ -18,16 +18,16 @@ namespace OT.Assessment.Infrastructure.RabbitMQ
     public class RabbitMQProducer : IRabbitMQProducer, IHostedService , IDisposable
     {
         private readonly RabbitSettings _rabbitSettings;
-        private readonly ConnectionFactory _connectionFactory;
-        private readonly IModel _channel;
-        private readonly IConnection _connection;
+        //private readonly ConnectionFactory _connectionFactory;
+        /*private readonly IModel _channel;
+        private readonly IConnection _connection;*/
 
 
-        public RabbitMQProducer(ConnectionFactory connectionFactory, IOptions<RabbitSettings> rabbitSettings)
+        public RabbitMQProducer( IOptions<RabbitSettings> rabbitSettings)
         {
             _rabbitSettings = rabbitSettings.Value;
 
-            _connectionFactory = connectionFactory;
+            /*_connectionFactory = connectionFactory;
             _connectionFactory.UserName = _rabbitSettings.User;
             _connectionFactory.Password = _rabbitSettings.Password;
             _connectionFactory.HostName = _rabbitSettings.HostName;
@@ -39,17 +39,31 @@ namespace OT.Assessment.Infrastructure.RabbitMQ
 
             _channel.ExchangeDeclare(_rabbitSettings.ExchangeName, ExchangeType.Direct);
             _channel.QueueDeclare(_rabbitSettings.QueueName, false, false, false);
-            _channel.QueueBind(_rabbitSettings.QueueName, _rabbitSettings.ExchangeName, _rabbitSettings.RoutingKey, null);
-
+            _channel.QueueBind(_rabbitSettings.QueueName, _rabbitSettings.ExchangeName, _rabbitSettings.RoutingKey, null);*/
+            //_channel = channel;
         }
 
         public void Publish<T>(T obj)
         {
 
+            var connectionFactory = new ConnectionFactory();
+            connectionFactory.UserName = _rabbitSettings.User;
+            connectionFactory.Password = _rabbitSettings.Password;
+            connectionFactory.HostName = _rabbitSettings.HostName;
+            connectionFactory.Port = _rabbitSettings.Port;
+
+            connectionFactory.ClientProvidedName = "Producer";
+            using var connection = connectionFactory.CreateConnection();
+            using var channel = connection.CreateModel();
+
+            channel.ExchangeDeclare(_rabbitSettings.ExchangeName, ExchangeType.Direct);
+            channel.QueueDeclare(_rabbitSettings.QueueName, false, false, false);
+            channel.QueueBind(_rabbitSettings.QueueName, _rabbitSettings.ExchangeName, _rabbitSettings.RoutingKey, null);
+
             string message = JsonSerializer.Serialize(obj);
             var body = Encoding.UTF8.GetBytes(message);
             
-            _channel.BasicPublish(exchange: _rabbitSettings.ExchangeName,
+            channel.BasicPublish(exchange: _rabbitSettings.ExchangeName,
                                  routingKey: _rabbitSettings.RoutingKey,
                                  basicProperties: null,
                                  body: body);
@@ -57,8 +71,8 @@ namespace OT.Assessment.Infrastructure.RabbitMQ
 
         public void Dispose()
         {
-            _channel.Close();
-            _connection.Close();  
+            /*_channel.Close();
+            _connection.Close();  */
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
