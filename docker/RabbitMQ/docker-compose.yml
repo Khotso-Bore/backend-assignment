@@ -1,6 +1,6 @@
 version: "3.0"
 services:
-  rabbit:
+   rabbit:
      container_name: dev_rabbit
      hostname: rabbit
      image: rabbitmq:3.12-management
@@ -10,6 +10,18 @@ services:
      ports:
         - "5672:5672"
         - "15672:15672"
+   sqlserver:
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      container_name: sqlserver
+      environment:
+         - ACCEPT_EULA=Y
+         - MSSQL_SA_PASSWORD=MyStrong!Passw0rd
+         - MSSQL_PID=Developer
+      ports:
+         - "1433:1433"
+      restart: always  
+
+
 networks:
-  rb-net:
-    driver: bridge
+   rb-net:
+      driver: bridge
