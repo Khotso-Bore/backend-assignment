@@ -1,22 +1,3 @@
-/*CREATE TABLE Players (
-	Id uniqueidentifier PRIMARY KEY,
-	Username varchar(50),
-	Constraint AK_Username UNIQUE(Username)
-);
-
-CREATE TABLE Providers(
-	Id uniqueidentifier PRIMARY KEY,
-	Name varchar(50),
-	Constraint AK_Name UNIQUE(Name)
-);
-
-CREATE TABLE Games(
-	Id uniqueidentifier PRIMARY KEY,
-	ProviderId uniqueidentifier,
-	Name varchar(50),
-	Theme varchar(50),
-	CONTRAINT FK_ProviderId FOREIGN KEY (ProviderId) REFERENCES Providers(Id),
-);*/
 
 CREATE TABLE CasinoWagers (
 	WagerId uniqueidentifier PRIMARY KEY,
