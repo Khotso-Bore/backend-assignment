@@ -36,10 +36,10 @@ var host = Host.CreateDefaultBuilder(args)
 
         services.AddAutoMapper(Assembly.Load("OT.Assessment.Infrastructure"));
 
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-        services.AddScoped<IMessageHandler, CasionWagerMessageHandler>();
-        services.AddScoped<IPlayersService, PlayersService>();
+        services.AddTransient<IMessageHandler, CasionWagerMessageHandler>();
+        services.AddTransient<IPlayersService, PlayersService>();
 
         services.AddHostedService<RabbitMQConsumer>();
         services.AddScoped(sp =>
