@@ -16,6 +16,6 @@ namespace OT.Assessment.Infrastructure.IRepository
         Task Update(Expression<Func<TEntity, bool>> expression, TEntity entity);
         Task DeleteOne(Expression<Func<TEntity, bool>> expression);
         Task<TEntity> InsertOne(TEntity entity);
-
+        Task InsertMany(List<TEntity> entities);
     }
 }

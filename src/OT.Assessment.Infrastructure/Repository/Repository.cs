@@ -66,5 +66,11 @@ namespace OT.Assessment.Infrastructure.Repository
             return entity;
 
         }
+
+        public async Task InsertMany(List<TEntity> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+
+        }
     }
 }
