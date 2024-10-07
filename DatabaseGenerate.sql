@@ -1,3 +1,10 @@
+IF EXISTS (select * from sys.databases where name = 'OT_Assessment_DB')
+BEGIN 
+    DROP DATABASE OT_Assesment_DB;
+END 
+	Create Database OT_Assesment_DB;
+Go
+USE OT_Assesment_DB;
 
 CREATE TABLE CasinoWagers (
 	WagerId uniqueidentifier PRIMARY KEY,
