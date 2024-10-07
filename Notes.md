@@ -29,6 +29,6 @@ The test was fun overall. Learned a lot from it, I just wish i realised what to 
 1. logging: would've been useful to capture logs at different points for better debugging
 2. Deduplication: At these volumes i imagine duplication can occur often, perhaps i could've made a method to check against existing Id's and mark found ones as duplicates to be processed later.
 3. Stored procedure: a stored procedure to check again exsting items would've been nice
-4. a cleaner system but time was against me
+4. a cleaner system but here we are.
 
 overall good time. hope you enjoy marking my code.
