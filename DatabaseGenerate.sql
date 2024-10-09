@@ -25,6 +25,20 @@ CREATE TABLE CasinoWagers (
 	Duration INT,
 	INDEX IX_AccountId (AccountId),
 );
+Go
+
+CREATE PROCEDURE TopSpenders
+    @Count INT         
+AS
+BEGIN
+    SELECT TOP (@Count)
+      [AccountId]
+      ,MAX([Username]) Username
+      ,SUM([Amount]) TotalAmount
+  FROM [OT_Assessment_DB].[dbo].[CasinoWagers]
+  GROUP BY [AccountId]
+  ORDER BY [TotalAmount] DESC
+END;
 
 
 
