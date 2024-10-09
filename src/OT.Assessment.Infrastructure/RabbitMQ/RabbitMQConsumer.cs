@@ -32,6 +32,7 @@ namespace OT.Assessment.Infrastructure.RabbitMQ
             _connectionFactory.Password = _rabbitSettings.Password;
             _connectionFactory.HostName = _rabbitSettings.HostName;
             _connectionFactory.Port = _rabbitSettings.Port;
+            _connectionFactory.DispatchConsumersAsync = true;
 
             _connectionFactory.ClientProvidedName = "Consumer";
             _connection = _connectionFactory.CreateConnection();
@@ -46,11 +47,11 @@ namespace OT.Assessment.Infrastructure.RabbitMQ
 
             //_messageHandler.HandleMessage([]);
 
-            var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += (sender, args) =>
+            var consumer = new AsyncEventingBasicConsumer(_channel);
+            consumer.Received += async (sender,args) =>
             {
                 var message = args.Body.ToArray();
-                _messageHandler.HandleMessage(message);
+                await _messageHandler.HandleMessage(message);
                 //Console.WriteLine(message);
 
                 _channel.BasicAck(args.DeliveryTag, false);
@@ -61,7 +62,7 @@ namespace OT.Assessment.Infrastructure.RabbitMQ
             //Consume();
         }
 
-        public void Consume()
+        /*public void Consume()
         {
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += (sender, args) =>
@@ -70,7 +71,7 @@ namespace OT.Assessment.Infrastructure.RabbitMQ
                 _messageHandler.HandleMessage(message);
                 _channel.BasicAck(args.DeliveryTag, false);
             };
-        }
+        }*/
 
         public void Dispose()
         {
