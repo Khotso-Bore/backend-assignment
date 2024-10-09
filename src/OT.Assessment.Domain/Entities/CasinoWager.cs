@@ -23,5 +23,5 @@ public class CasinoWager
     public int NumberOfBets { get; set; }
     public string CountryCode { get; set; }
     public string SessionData { get; set; }
-    public long Duration { get; set; }
+    public int Duration { get; set; }
 }
