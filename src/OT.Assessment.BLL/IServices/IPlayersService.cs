@@ -1,4 +1,5 @@
 ﻿using OT.Assessment.Infrastructure.DTO;
+using OT.Assessment.Tester.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,6 @@ namespace OT.Assessment.BLL.IServices
         Task AddBulk(List<AddCasionWagerDTO> addCasionWagerDTOs);
         Task AddCasinoWager(AddCasionWagerDTO addCasionWagerDTO);
         Task<PlayerWagersDTO> GetPlayerWagers(string playerId, int pageSize, int page);
-        Task<List<SpenderDTO>> TopSpenders(int count);
+        Task<List<Spender>> TopSpenders(int count);
     }
 }

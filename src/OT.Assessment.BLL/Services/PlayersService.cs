@@ -4,6 +4,7 @@ using OT.Assessment.BLL.IServices;
 using OT.Assessment.Infrastructure.DTO;
 using OT.Assessment.Infrastructure.IRepository;
 using OT.Assessment.Infrastructure.RabbitMQ;
+using OT.Assessment.Tester.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,9 +68,9 @@ namespace OT.Assessment.BLL.Services
 
         }
 
-        public Task<List<SpenderDTO>> TopSpenders(int count)
+        public async Task<List<Spender>> TopSpenders(int count)
         {
-            var topSpenders = _unitOfWork.Wagers.GetSet()
+            /*var topSpenders = await _unitOfWork.Wagers.GetSet()
                 .GroupBy(x => x.AccountId)
                 .Select(g => new SpenderDTO
                 {
@@ -79,9 +80,15 @@ namespace OT.Assessment.BLL.Services
                 })
                 .OrderByDescending(x => x.TotalAmountSpend)
                 .Take(count)
+                .ToListAsync();*/
+
+            var topSpenders = await _unitOfWork.GetContext()
+                .Spenders
+                .FromSqlRaw("EXEC TopSpenders @Count = {0}", count)
                 .ToListAsync();
 
             return topSpenders;
+
         }
            
     }
