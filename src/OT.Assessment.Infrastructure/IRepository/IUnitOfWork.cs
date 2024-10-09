@@ -1,4 +1,5 @@
-﻿using OT.Assessment.Domain.Entities;
+﻿using OT.Assessment.Domain.Data;
+using OT.Assessment.Domain.Entities;
 using OT.Assessment.Tester.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,6 @@ namespace OT.Assessment.Infrastructure.IRepository
 
         Task Commit();
         void Dispose();
+        OTDbContext GetContext();
     }
 }

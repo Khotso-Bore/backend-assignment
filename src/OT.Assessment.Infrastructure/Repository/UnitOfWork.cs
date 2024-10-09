@@ -29,6 +29,11 @@ namespace OT.Assessment.Infrastructure.Repository
             Games = new Repository<Game>(context);
         }
 
+        public OTDbContext GetContext()
+        {
+            return _context;
+        }
+
         public async Task Commit()
         {
             await _context.SaveChangesAsync();
