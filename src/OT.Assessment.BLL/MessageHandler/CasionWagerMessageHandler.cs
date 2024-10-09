@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore.Metadata;
 using OT.Assessment.Infrastructure.DTO;
 using OT.Assessment.Infrastructure.IRepository;
 using OT.Assessment.Infrastructure.MessageHandler;
 using OT.Assessment.Tester.Infrastructure;
+using RabbitMQ.Client.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,6 +28,8 @@ namespace OT.Assessment.BLL.MessageHandler
 
         public async Task HandleMessage(byte[] message)
         {
+            //var message = args.Body.ToArray();
+
             if (message.Length == 0)
                 return;
 
@@ -37,8 +41,12 @@ namespace OT.Assessment.BLL.MessageHandler
                 {
                     var casionWager = _mapper.Map<CasinoWager>(item);
 
-                    await _unitOfWork.Wagers.InsertOne(casionWager);
-                    await _unitOfWork.Commit();
+                    var response = await _unitOfWork.Wagers.FindOne(x => x.WagerId.Equals(casionWager.WagerId));
+                    if (response == null)
+                    {
+                        await _unitOfWork.Wagers.InsertOne(casionWager);
+                        await _unitOfWork.Commit();
+                    }
                 }
                 catch (Exception e) { 
                 
@@ -46,7 +54,9 @@ namespace OT.Assessment.BLL.MessageHandler
                 }
                 
             }
-            //await _unitOfWork.Commit();
+            Console.WriteLine("done");
+            //channel.BasicAck(args.DeliveryTag, false)
+
 
         }
     }
