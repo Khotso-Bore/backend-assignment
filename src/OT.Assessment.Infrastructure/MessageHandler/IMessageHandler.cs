@@ -9,6 +9,6 @@ namespace OT.Assessment.Infrastructure.MessageHandler
 {
     public interface IMessageHandler
     {
-        Task HandleMessage(byte[] bytes);
+        Task HandleMessage(byte[] message);
     }
 }
