@@ -34,7 +34,7 @@ namespace OT.Assessment.Infrastructure.Repository
         public async Task<TEntity> FindOne(Expression<Func<TEntity, bool>> expression)
         {
             var response = await _dbSet.FirstOrDefaultAsync(expression);
-            if (response != null)
+            if (response == null)
                 return null;
 
             return response;
